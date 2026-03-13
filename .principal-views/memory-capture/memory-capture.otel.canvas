@@ -1,0 +1,538 @@
+{
+  "nodes": [
+    {
+      "id": "capture-started",
+      "type": "text",
+      "x": 100,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#3b82f6",
+      "text": "# Capture Started\nCapture pipeline begins processing",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Play",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "event": {
+          "name": "capture.started",
+          "attributes": {
+            "capture.scope": {
+              "type": "string",
+              "description": "Memory scope (shared, profile:*, etc.)",
+              "required": true
+            },
+            "capture.remember_intent": {
+              "type": "boolean",
+              "description": "Whether user explicitly requested remember",
+              "required": true,
+              "display": false
+            },
+            "capture.memory_flush": {
+              "type": "boolean",
+              "description": "Whether this is a pre-compaction flush turn",
+              "required": true,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "notes-parsed",
+      "type": "text",
+      "x": 100,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#8b5cf6",
+      "text": "# Notes Parsed\nMemory notes extracted from output",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Search",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "processing"
+        },
+        "event": {
+          "name": "capture.notes.parsed",
+          "attributes": {
+            "capture.note_count": {
+              "type": "integer",
+              "description": "Number of memory notes found",
+              "required": true
+            },
+            "capture.action_count": {
+              "type": "integer",
+              "description": "Number of memory actions found",
+              "required": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "policy-checked",
+      "type": "text",
+      "x": 100,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#f59e0b",
+      "text": "# Policy Validated\nJunk and plausibility checked",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Shield",
+        "references": ["lib/core/capture-service.js", "lib/core/policy.js"],
+        "otel": {
+          "kind": "event",
+          "category": "validation"
+        },
+        "event": {
+          "name": "capture.policy.checked",
+          "attributes": {
+            "capture.memory_type": {
+              "type": "string",
+              "description": "Memory type (USER_FACT, PREFERENCE, etc.)",
+              "required": true
+            },
+            "capture.is_junk": {
+              "type": "boolean",
+              "description": "Whether content matched junk patterns",
+              "required": true
+            },
+            "capture.junk_reason": {
+              "type": "string",
+              "description": "Junk rejection reason code",
+              "required": false
+            },
+            "capture.plausibility_flags": {
+              "type": "string",
+              "description": "Comma-separated plausibility flag names",
+              "required": false,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "dedupe-checked",
+      "type": "text",
+      "x": 100,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "color": "#06b6d4",
+      "text": "# Duplicates Checked\nExact and semantic matching done",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Copy",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "processing"
+        },
+        "event": {
+          "name": "capture.dedupe.checked",
+          "attributes": {
+            "capture.exact_match": {
+              "type": "boolean",
+              "description": "Whether exact duplicate was found",
+              "required": true
+            },
+            "capture.semantic_match": {
+              "type": "boolean",
+              "description": "Whether semantic duplicate was found",
+              "required": true
+            },
+            "capture.similarity": {
+              "type": "double",
+              "description": "Jaccard similarity score (0-1)",
+              "required": false,
+              "display": false
+            },
+            "capture.matched_memory_id": {
+              "type": "string",
+              "description": "ID of matched duplicate memory",
+              "required": false,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "capture-complete",
+      "type": "text",
+      "x": 100,
+      "y": 650,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "text": "# Capture Complete\nPipeline finished successfully",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Check",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "lifecycle"
+        },
+        "event": {
+          "name": "capture.complete",
+          "attributes": {
+            "capture.processed": {
+              "type": "integer",
+              "description": "Total notes processed",
+              "required": true
+            },
+            "capture.inserted": {
+              "type": "integer",
+              "description": "Notes successfully inserted",
+              "required": true
+            },
+            "capture.rejected_junk": {
+              "type": "integer",
+              "description": "Notes rejected as junk",
+              "required": true
+            },
+            "capture.dropped_duplicate": {
+              "type": "integer",
+              "description": "Notes dropped as duplicates",
+              "required": true,
+              "display": false
+            },
+            "capture.queued_review": {
+              "type": "integer",
+              "description": "Notes queued for review",
+              "required": true
+            },
+            "capture.native_written": {
+              "type": "integer",
+              "description": "Notes written to native markdown",
+              "required": true,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "note-inserted",
+      "type": "text",
+      "x": 400,
+      "y": 500,
+      "width": 200,
+      "height": 100,
+      "color": "#22c55e",
+      "text": "# Memory Stored\nNote inserted to registry",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Database",
+        "references": ["lib/core/capture-service.js", "lib/core/projection-store.js"],
+        "otel": {
+          "kind": "event",
+          "category": "data"
+        },
+        "event": {
+          "name": "capture.note.inserted",
+          "attributes": {
+            "capture.memory_id": {
+              "type": "string",
+              "description": "UUID of inserted memory",
+              "required": true
+            },
+            "capture.memory_type": {
+              "type": "string",
+              "description": "Memory type (USER_FACT, PREFERENCE, etc.)",
+              "required": true
+            },
+            "capture.scope": {
+              "type": "string",
+              "description": "Memory scope",
+              "required": true,
+              "display": false
+            },
+            "capture.written_registry": {
+              "type": "boolean",
+              "description": "Whether written to SQLite registry",
+              "required": true,
+              "display": false
+            },
+            "capture.written_native": {
+              "type": "boolean",
+              "description": "Whether written to native markdown",
+              "required": true,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "note-rejected",
+      "type": "text",
+      "x": 400,
+      "y": 200,
+      "width": 200,
+      "height": 100,
+      "color": "#ef4444",
+      "text": "# Note Rejected\nMemory failed validation",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "X",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "error"
+        },
+        "event": {
+          "name": "capture.note.rejected",
+          "attributes": {
+            "capture.reason": {
+              "type": "string",
+              "description": "Rejection reason (junk, duplicate, plausibility)",
+              "required": true
+            },
+            "capture.reason_code": {
+              "type": "string",
+              "description": "Machine-readable reason code",
+              "required": true
+            },
+            "capture.matched_pattern": {
+              "type": "string",
+              "description": "Pattern that triggered rejection",
+              "required": false,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "note-queued",
+      "type": "text",
+      "x": 400,
+      "y": 350,
+      "width": 200,
+      "height": 100,
+      "color": "#f59e0b",
+      "text": "# Queued for Review\nNote needs human/LLM review",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "Clock",
+        "references": ["lib/core/capture-service.js", "lib/core/review-queue.js"],
+        "otel": {
+          "kind": "event",
+          "category": "processing"
+        },
+        "event": {
+          "name": "capture.note.queued",
+          "attributes": {
+            "capture.reason": {
+              "type": "string",
+              "description": "Queue reason (semantic_borderline, plausibility_flag)",
+              "required": true
+            },
+            "capture.reason_code": {
+              "type": "string",
+              "description": "Machine-readable reason code",
+              "required": true,
+              "display": false
+            },
+            "capture.similarity": {
+              "type": "double",
+              "description": "Similarity score for semantic borderline",
+              "required": false,
+              "display": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "capture-error",
+      "type": "text",
+      "x": 400,
+      "y": 50,
+      "width": 200,
+      "height": 100,
+      "color": "#ef4444",
+      "text": "# Capture Failed\nPipeline encountered error",
+      "pv": {
+        "nodeType": "event",
+        "status": "draft",
+        "shape": "rectangle",
+        "icon": "AlertTriangle",
+        "references": ["lib/core/capture-service.js"],
+        "otel": {
+          "kind": "event",
+          "category": "error"
+        },
+        "event": {
+          "name": "capture.error",
+          "attributes": {
+            "error.type": {
+              "type": "string",
+              "description": "Error type/class name",
+              "required": true
+            },
+            "error.message": {
+              "type": "string",
+              "description": "Error message",
+              "required": true
+            },
+            "capture.phase": {
+              "type": "string",
+              "description": "Phase where error occurred (parse, policy, dedupe, write)",
+              "required": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "started-to-parsed",
+      "fromNode": "capture-started",
+      "toNode": "notes-parsed",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "sequence" }
+    },
+    {
+      "id": "parsed-to-policy",
+      "fromNode": "notes-parsed",
+      "toNode": "policy-checked",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "sequence" }
+    },
+    {
+      "id": "policy-to-dedupe",
+      "fromNode": "policy-checked",
+      "toNode": "dedupe-checked",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "sequence" }
+    },
+    {
+      "id": "dedupe-to-complete",
+      "fromNode": "dedupe-checked",
+      "toNode": "capture-complete",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "pv": { "edgeType": "sequence" }
+    },
+    {
+      "id": "dedupe-to-inserted",
+      "fromNode": "dedupe-checked",
+      "toNode": "note-inserted",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "success" }
+    },
+    {
+      "id": "policy-to-rejected",
+      "fromNode": "policy-checked",
+      "toNode": "note-rejected",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "failure" }
+    },
+    {
+      "id": "policy-to-queued",
+      "fromNode": "policy-checked",
+      "toNode": "note-queued",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "review" }
+    },
+    {
+      "id": "dedupe-to-queued",
+      "fromNode": "dedupe-checked",
+      "toNode": "note-queued",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "review" }
+    },
+    {
+      "id": "started-to-error",
+      "fromNode": "capture-started",
+      "toNode": "capture-error",
+      "fromSide": "right",
+      "toSide": "left",
+      "pv": { "edgeType": "failure" }
+    }
+  ],
+  "pv": {
+    "name": "Memory Capture Pipeline",
+    "version": "1.0.0",
+    "description": "Extracts memory notes from agent outputs, validates against policy, deduplicates, and stores to registry and native markdown.",
+    "markdown": ".principal-views/memory-capture/memory-capture.md",
+    "nodeTypes": {
+      "event": {
+        "shape": "rectangle",
+        "color": "#64748b",
+        "description": "OTEL span event"
+      }
+    },
+    "edgeTypes": {
+      "sequence": {
+        "style": "solid",
+        "color": "#64748b",
+        "width": 2,
+        "directed": true
+      },
+      "success": {
+        "style": "solid",
+        "color": "#22c55e",
+        "width": 2,
+        "directed": true
+      },
+      "failure": {
+        "style": "dashed",
+        "color": "#ef4444",
+        "width": 2,
+        "directed": true
+      },
+      "review": {
+        "style": "dashed",
+        "color": "#f59e0b",
+        "width": 2,
+        "directed": true
+      }
+    },
+    "display": {
+      "layout": "manual",
+      "theme": {
+        "primary": "#3b82f6",
+        "success": "#22c55e",
+        "warning": "#f59e0b",
+        "danger": "#ef4444"
+      }
+    }
+  }
+}

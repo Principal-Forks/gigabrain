@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "canvas": ".principal-views/memory-capture/memory-capture.otel.canvas",
+  "name": "Memory Capture",
+  "description": "Extracts memory notes from agent outputs, validates against policy, deduplicates, and stores to registry",
+  "spanPattern": "memory.capture",
+  "mode": "span-tree",
+  "status": "draft",
+  "scenarios": [
+    {
+      "id": "success",
+      "priority": 1,
+      "description": "Memory notes captured and stored successfully",
+      "template": {
+        "events": {
+          "capture.started": "Started capture for scope {{capture.scope}}",
+          "capture.notes.parsed": "Parsed {{capture.note_count}} notes, {{capture.action_count}} actions",
+          "capture.policy.checked": "Policy check: type={{capture.memory_type}}, junk={{capture.is_junk}}",
+          "capture.dedupe.checked": "Dedupe check: exact={{capture.exact_match}}, semantic={{capture.semantic_match}}",
+          "capture.note.inserted": "Stored memory {{capture.memory_id}} ({{capture.memory_type}})",
+          "capture.complete": "Capture complete: {{capture.inserted}}/{{capture.processed}} inserted"
+        },
+        "summary": "Captured {{capture.inserted}} memories ({{capture.rejected_junk}} junk, {{capture.dropped_duplicate}} duplicates)"
+      }
+    },
+    {
+      "id": "all-rejected",
+      "priority": 2,
+      "description": "All memory notes rejected (junk or duplicate)",
+      "template": {
+        "events": {
+          "capture.started": "Started capture for scope {{capture.scope}}",
+          "capture.notes.parsed": "Parsed {{capture.note_count}} notes",
+          "capture.policy.checked": "Policy check: junk={{capture.is_junk}}, reason={{capture.junk_reason}}",
+          "capture.note.rejected": "Rejected: {{capture.reason}} ({{capture.reason_code}})",
+          "capture.complete": "Capture complete: 0/{{capture.processed}} inserted, {{capture.rejected_junk}} junk"
+        },
+        "summary": "No memories stored - {{capture.rejected_junk}} rejected as junk, {{capture.dropped_duplicate}} duplicates"
+      }
+    },
+    {
+      "id": "queued-review",
+      "priority": 3,
+      "description": "Memory notes queued for human/LLM review",
+      "template": {
+        "events": {
+          "capture.started": "Started capture for scope {{capture.scope}}",
+          "capture.notes.parsed": "Parsed {{capture.note_count}} notes",
+          "capture.policy.checked": "Policy check flagged plausibility issues",
+          "capture.note.queued": "Queued for review: {{capture.reason}} (similarity={{capture.similarity}})",
+          "capture.complete": "Capture complete: {{capture.queued_review}} queued for review"
+        },
+        "summary": "{{capture.queued_review}} memories queued for review"
+      }
+    },
+    {
+      "id": "error",
+      "priority": 4,
+      "description": "Capture pipeline failed with error",
+      "template": {
+        "events": {
+          "capture.started": "Started capture for scope {{capture.scope}}",
+          "capture.error": "FAILED in {{capture.phase}}: {{error.type}} - {{error.message}}"
+        },
+        "summary": "Capture failed: {{error.message}}"
+      }
+    }
+  ]
+}

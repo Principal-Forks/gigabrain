@@ -1,0 +1,146 @@
+# Principal View Component Library
+version: "1.0.0"
+name: "Gigabrain Components"
+description: "Component library for Gigabrain memory stack visualizations"
+
+resources:
+  gigabrain-core:
+    description: "Gigabrain memory engine services"
+    type: "service"
+    service.name: "gigabrain"
+    service.version: "0.5.2"
+    deployment.environment: "development"
+
+nodeComponents:
+  entry-point:
+    shape: rectangle
+    color: "#3b82f6"
+    description: "Integration entry points (plugins, MCP servers, APIs)"
+
+  service:
+    shape: rectangle
+    color: "#22c55e"
+    description: "Core service modules"
+
+  database:
+    shape: hexagon
+    color: "#0ea5e9"
+    description: "Database and storage systems"
+
+  store:
+    shape: rectangle
+    color: "#0ea5e9"
+    description: "Data stores (event store, projection store)"
+
+  queue:
+    shape: rectangle
+    color: "#f59e0b"
+    description: "Queues and buffers"
+
+  adapter:
+    shape: rectangle
+    color: "#06b6d4"
+    description: "Protocol and interface adapters"
+
+  rules:
+    shape: rectangle
+    color: "#f43f5e"
+    description: "Policy and rule engines"
+
+  output:
+    shape: rectangle
+    color: "#14b8a6"
+    description: "Output generators (vault, metrics)"
+
+  cli:
+    shape: rectangle
+    color: "#64748b"
+    description: "CLI tools and scripts"
+
+  config:
+    shape: rectangle
+    color: "#78716c"
+    description: "Configuration and schema"
+
+  intelligence:
+    shape: diamond
+    color: "#ec4899"
+    description: "Intelligence and world model"
+
+edgeComponents:
+  data-flow:
+    style: solid
+    color: "#64748b"
+    width: 2
+    directed: true
+    description: "Primary data flow between components"
+
+  query:
+    style: dashed
+    color: "#0ea5e9"
+    width: 1
+    directed: true
+    description: "Read/query operations"
+
+  write:
+    style: solid
+    color: "#22c55e"
+    width: 2
+    directed: true
+    description: "Write operations"
+
+  command:
+    style: solid
+    color: "#8b5cf6"
+    width: 2
+    directed: true
+    description: "Command/control flow"
+
+  validate:
+    style: dotted
+    color: "#f43f5e"
+    width: 1
+    directed: true
+    description: "Validation checks"
+
+  enqueue:
+    style: dashed
+    color: "#f59e0b"
+    width: 1
+    directed: true
+    description: "Queue enqueue operations"
+
+  dequeue:
+    style: dashed
+    color: "#f59e0b"
+    width: 1
+    directed: true
+    description: "Queue dequeue operations"
+
+  persist:
+    style: solid
+    color: "#0ea5e9"
+    width: 2
+    directed: true
+    description: "Database persistence"
+
+  orchestrate:
+    style: solid
+    color: "#f97316"
+    width: 2
+    directed: true
+    description: "Orchestration/pipeline control"
+
+  inference:
+    style: dashed
+    color: "#a855f7"
+    width: 2
+    directed: true
+    description: "LLM inference calls"
+
+  config:
+    style: dotted
+    color: "#78716c"
+    width: 1
+    directed: true
+    description: "Configuration dependencies"
